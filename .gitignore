@@ -1,0 +1,8 @@
+# 
+.vs/
+packages/
+x64
+imgui.ini
+*.user
+*.cso
+*.bak
