@@ -129,13 +129,10 @@ void GfxDevice::WaitForGPU()
   hr = m_d3d12Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
   ThrowIfFailed(hr, "CreateFenceに失敗");
 
-  auto frameIndex = GetFrameIndex();
-  const auto value = m_frameInfo[frameIndex].fenceValue;
-  m_commandQueue->Signal(m_frameFence.Get(), value);
-  m_frameFence->SetEventOnCompletion(value, hWait);
+  const auto value = 1;
+  m_commandQueue->Signal(fence.Get(), value);
+  fence->SetEventOnCompletion(value, hWait);
   WaitForSingleObjectEx(hWait, INFINITE, FALSE);
-
-  m_frameInfo[frameIndex].fenceValue = value + 1;
 
   CloseHandle(hWait);
 }
