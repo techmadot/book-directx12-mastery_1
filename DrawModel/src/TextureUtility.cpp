@@ -251,7 +251,7 @@ bool CreateTextureFromMemory(Microsoft::WRL::ComPtr<ID3D12Resource1>& outImage, 
 
   gfxDevice->Submit(commandList.Get());
   gfxDevice->WaitForGPU();
-
+  uploadHeap->Release();
   texture.As(&outImage);
   return true;
 }
