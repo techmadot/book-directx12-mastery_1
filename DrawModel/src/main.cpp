@@ -1,5 +1,7 @@
 ﻿#include "Win32Application.h"
 
+#include <combaseapi.h>
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -10,6 +12,8 @@ int __stdcall wWinMain(_In_ HINSTANCE hInstance,
 {
   UNREFERENCED_PARAMETER(hPrevInstance);
   UNREFERENCED_PARAMETER(lpCmdLine);
+  
+  ::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
   Win32Application::WindowInitParams initParams{
     .width = 1280,

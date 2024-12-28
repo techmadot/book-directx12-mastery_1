@@ -224,7 +224,10 @@ bool CreateTextureFromMemory(Microsoft::WRL::ComPtr<ID3D12Resource1>& outImage, 
   {
     return false;
   }
-  auto uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(metadata.mipLevels));
+
+  std::vector<D3D12_SUBRESOURCE_DATA> subresources;
+  DirectX::PrepareUpload(d3d12Device.Get(), image.GetImages(), image.GetImageCount(), metadata, subresources);
+  auto uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
   
   // アップロードヒープの準備.
   CD3DX12_HEAP_PROPERTIES heapProps(D3D12_HEAP_TYPE_UPLOAD);
@@ -235,9 +238,6 @@ bool CreateTextureFromMemory(Microsoft::WRL::ComPtr<ID3D12Resource1>& outImage, 
   {
     return false;
   }
-
-  std::vector<D3D12_SUBRESOURCE_DATA> subresources;
-  DirectX::PrepareUpload(d3d12Device.Get(), image.GetImages(), image.GetImageCount(), metadata, subresources);
 
   auto commandList = gfxDevice->CreateCommandList();
   UpdateSubresources(commandList.Get(), texture.Get(), uploadHeap, 0, 0, UINT(subresources.size()), subresources.data());
